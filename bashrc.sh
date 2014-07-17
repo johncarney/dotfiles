@@ -24,6 +24,8 @@ alias lsh='ls -Alh'
 alias gco='git checkout'
 alias grm='git rebase master'
 alias grc='git rebase --continue'
+alias gls='git ls-files'
+alias glm='git ls-files --modified'
 
 # Makes bash completion work with the gco alias.
 __git_complete gco _git_checkout
