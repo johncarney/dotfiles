@@ -30,8 +30,26 @@ alias glm='git ls-files --modified'
 # Makes bash completion work with the gco alias.
 __git_complete gco _git_checkout
 
-# Most recent Rails migration
-alias lm='ls -1 db/migrate/*.rb | tail -n 1'
+# ---------------------------------------------------
+# Most recent Rails migration(s)
+#
+# Examples:
+#
+#  lmigrate
+#  # => db/migrate/20140813044534_my_migration.rb
+#
+#  lmigrate 2
+#  # => db/migrate/20140807051212_older_migration.rb
+#  # => db/migrate/20140813044534_my_migration.rb
+#
+function lmigrate {
+    if [ -n "$1" ] ; then
+        N="$1"
+    else
+        N="1"
+    fi
+    ls -1 db/migrate/*.rb | tail -n "$N"
+}
 
 # Zeus aliases
 alias zrspec='zeus rspec -fd --order defined --no-profile'
