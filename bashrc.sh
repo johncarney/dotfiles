@@ -57,6 +57,7 @@ alias zconsole='zeus console'
 alias zstart='zeus start'
 alias zrake='zeus rake'
 alias zgenerate='zeus generate'
+alias zserver='zeus server'
 
 # Generate a migration and open it in Sublime Text
 function zmigrate {
