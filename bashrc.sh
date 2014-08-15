@@ -67,6 +67,21 @@ function zmigrate {
     fi
 }
 
+# List all spec files matching the given name
+function lspec {
+    local pattern="*"
+    if [ -n "$1" ] ; then
+        pattern="$1"
+    fi
+
+    local specs=(`find spec -name "${pattern}_spec.rb" -o -name "${pattern}.feature" -o -name "${pattern}" -type f`)
+    if [ ! -n "${specs[*]}" ] ; then
+        specs=("spec/${pattern}")
+    fi
+
+    ls -1 ${specs[@]}
+}
+
 # xarg aliases
 alias xrspec='xargs zeus rspec -fd --order defined --no-profile'
 alias xsublime='xargs sublime'
