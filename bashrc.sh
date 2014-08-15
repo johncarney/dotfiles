@@ -52,7 +52,6 @@ function lmigrate {
 }
 
 # Zeus aliases
-alias zrspec='zeus rspec -fd --order defined --no-profile'
 alias zconsole='zeus console'
 alias zstart='zeus start'
 alias zrake='zeus rake'
@@ -80,6 +79,15 @@ function lspec {
     fi
 
     ls -1 ${specs[@]}
+}
+
+# Run all specs matching the given name
+function zrspec {
+    local specs=(`lspec "$1"`)
+    if [ -n "${specs[*]}" ] ; then
+        echo "${specs[*]}"
+        zeus rspec -fd --order defined --no-profile "${specs[@]}"
+    fi
 }
 
 # xarg aliases
