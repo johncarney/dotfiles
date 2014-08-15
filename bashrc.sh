@@ -58,6 +58,14 @@ alias zstart='zeus start'
 alias zrake='zeus rake'
 alias zgenerate='zeus generate'
 
+# Generate a migration and open it in Sublime Text
+function zmigrate {
+    zeus generate migration "$1"
+    if [ $? -eq 0 ] ; then
+        sublime `lmigrate`
+    fi
+}
+
 # xarg aliases
 alias xrspec='xargs zeus rspec -fd --order defined --no-profile'
 alias xsublime='xargs sublime'
