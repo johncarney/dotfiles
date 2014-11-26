@@ -1,6 +1,6 @@
 export HISTFILESIZE=120000
 export HISTSIZE=30000
-export HISTCONTROL=erasedups
+export HISTCONTROL=erasedups:ignorespace
 shopt -s histappend
 shopt -s histreedit
 
@@ -25,7 +25,7 @@ alias gco='git checkout'
 alias grm='git rebase master'
 alias grc='git rebase --continue'
 alias gls='git ls-files'
-alias glm='git ls-files --modified'
+alias glm='git ls-files --modified | sort -u'
 
 # Makes bash completion work with the gco alias.
 __git_complete gco _git_checkout
@@ -51,20 +51,32 @@ function lmigrate {
     ls -1 db/migrate/*.rb | tail -n "$N"
 }
 
+# Rails aliases
+alias console='rails console'
+alias generate='rails generate'
+alias server='rails server'
+
 # Zeus aliases
-alias zconsole='zeus console'
-alias zstart='zeus start'
-alias zrake='zeus rake'
-alias zgenerate='zeus generate'
-alias zserver='zeus server'
+# alias zconsole='zeus console'
+# alias zstart='zeus start'
+# alias zrake='zeus rake'
+# alias zgenerate='zeus generate'
+# alias zserver='zeus server'
 
 # Generate a migration and open it in Sublime Text
-function zmigrate {
-    zeus generate migration "$1"
+function migrate {
+    rails generate migration "$1"
     if [ $? -eq 0 ] ; then
         sublime `lmigrate`
     fi
 }
+
+# function zmigrate {
+#     zeus generate migration "$1"
+#     if [ $? -eq 0 ] ; then
+#         sublime `lmigrate`
+#     fi
+# }
 
 # List all spec files matching the given name
 function lspec {
@@ -81,18 +93,22 @@ function lspec {
     ls -1 ${specs[@]}
 }
 
-# Run all specs matching the given name
-function zrspec {
-    local specs=(`lspec "$1"`)
-    if [ -n "${specs[*]}" ] ; then
-        echo "${specs[*]}"
-        zeus rspec -fd --order defined --no-profile "${specs[@]}"
-    fi
+# RSpec without the crap
+function qspec {
+    rspec -fd --order defined --no-profile $*
 }
 
+# Run all specs matching the given name
+# function zrspec {
+#     local specs=(`lspec "$1"`)
+#     if [ -n "${specs[*]}" ] ; then
+#         echo "${specs[*]}"
+#         zeus rspec -fd --order defined --no-profile "${specs[@]}"
+#     fi
+# }
+
 # xarg aliases
-alias xrspec='xargs zeus rspec -fd --order defined --no-profile'
-alias xsublime='xargs sublime'
+alias xspec='xargs rspec -fd --order defined --no-profile'
 
 # source ~/.profile
 # source ~/.git-prompt.sh
@@ -102,3 +118,5 @@ export PATH="/usr/local/bin:${PATH//\/usr\/local\/bin:/}"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+eval "$(direnv hook bash)"
