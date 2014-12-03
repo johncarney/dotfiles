@@ -95,7 +95,7 @@ function lspec {
 
 # RSpec without the crap
 function qspec {
-    rspec -fd --order defined --no-profile $*
+    rspec -fd --order defined --no-profile "$@"
 }
 
 # Run all specs matching the given name
@@ -115,8 +115,8 @@ alias xspec='xargs rspec -fd --order defined --no-profile'
 
 export PATH="/usr/local/bin:${PATH//\/usr\/local\/bin:/}"
 
+eval "$(direnv hook bash)"
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-eval "$(direnv hook bash)"
