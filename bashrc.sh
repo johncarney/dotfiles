@@ -56,12 +56,8 @@ alias console='rails console'
 alias generate='rails generate'
 alias server='rails server'
 
-# Zeus aliases
-# alias zconsole='zeus console'
-# alias zstart='zeus start'
-# alias zrake='zeus rake'
-# alias zgenerate='zeus generate'
-# alias zserver='zeus server'
+# RSpec aliases
+alias pspec='parallel_rspec --multiply-processes 0.75 --type turnip'
 
 # Generate a migration and open it in Sublime Text
 function migrate {
@@ -98,14 +94,16 @@ function qspec {
     rspec -fd --order defined --no-profile "$@"
 }
 
-# Run all specs matching the given name
-# function zrspec {
-#     local specs=(`lspec "$1"`)
-#     if [ -n "${specs[*]}" ] ; then
-#         echo "${specs[*]}"
-#         zeus rspec -fd --order defined --no-profile "${specs[@]}"
-#     fi
-# }
+# Strip terminal codes from text
+function stripcolour {
+    ssed -R -e "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g" "$@"
+}
+
+# List failing rspec tests
+function failing-tests {
+    RE='rspec\s+\./(spec/[^:]+:\d+)'
+    grep -P "$RE" "$@" | ssed -R -e 's!^.*?'"$RE"'.*$!\1!'
+}
 
 # xarg aliases
 alias xspec='xargs rspec -fd --order defined --no-profile'
