@@ -57,7 +57,7 @@ alias generate='rails generate'
 alias server='rails server'
 
 # RSpec aliases
-alias pspec='parallel_rspec --multiply-processes 0.75 --type turnip'
+alias pspec='bundle exec parallel_rspec --multiply-processes 0.75 --type turnip'
 
 # Generate a migration and open it in Sublime Text
 function migrate {
