@@ -25,7 +25,7 @@ alias gco='git checkout'
 alias grm='git rebase master'
 alias grc='git rebase --continue'
 alias gls='git ls-files'
-alias glm='git ls-files --modified | sort -u'
+alias glm='git ls-files --modified | uniq'
 
 # Makes bash completion work with the gco alias.
 __git_complete gco _git_checkout
@@ -67,33 +67,6 @@ function migrate {
     fi
 }
 
-# function zmigrate {
-#     zeus generate migration "$1"
-#     if [ $? -eq 0 ] ; then
-#         sublime `lmigrate`
-#     fi
-# }
-
-# List all spec files matching the given name
-function lspec {
-    local pattern="*"
-    if [ -n "$1" ] ; then
-        pattern="$1"
-    fi
-
-    local specs=(`find spec -name "${pattern}_spec.rb" -o -name "${pattern}.feature" -o -name "${pattern}" -type f`)
-    if [ ! -n "${specs[*]}" ] ; then
-        specs=("spec/${pattern}")
-    fi
-
-    ls -1 ${specs[@]}
-}
-
-# RSpec without the crap
-function qspec {
-    rspec -fd --order defined --no-profile "$@"
-}
-
 # Strip terminal codes from text
 function stripcolour {
     ssed -R -e "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g" "$@"
@@ -102,19 +75,16 @@ function stripcolour {
 # List failing rspec tests
 function failing-tests {
     RE='rspec\s+\./(spec/[^:]+:\d+)'
-    grep -P "$RE" "$@" | ssed -R -e 's!^.*?'"$RE"'.*$!\1!'
+    grep -P "$RE" tmp/failing_specs.log | ssed -R -e 's!^.*?'"$RE"'.*$!\1!'
 }
 
-# xarg aliases
-alias xspec='xargs rspec -fd --order defined --no-profile'
+function failing-files {
+    failing-tests | ssed -R -e 's/^(.*):\d+$/\1/' | uniq
+}
 
-# source ~/.profile
-# source ~/.git-prompt.sh
-
+export PATH="$HOME/bin:$PATH"
 export PATH="/usr/local/bin:${PATH//\/usr\/local\/bin:/}"
 
 eval "$(direnv hook bash)"
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
