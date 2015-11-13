@@ -2,7 +2,7 @@ export HISTFILESIZE=120000
 export HISTSIZE=30000
 export HISTCONTROL=erasedups:ignorespace
 shopt -s histappend
-shopt -s histreedit
+# shopt -s histreedit
 
 if [ -f `brew --prefix`/etc/bash_completion ]; then
     . `brew --prefix`/etc/bash_completion
@@ -17,15 +17,17 @@ export RUBY_GC_MALLOC_LIMIT=90000000
 export RUBY_FREE_MIN=200000
 export RUBY_GC_HEAP_FREE_SLOTS=200000
 
-alias ls='ls -Al'
-alias lsh='ls -Alh'
+alias ls="ls -Alh"
 
 # Git aliases
-alias gco='git checkout'
-alias grm='git rebase master'
-alias grc='git rebase --continue'
-alias gls='git ls-files'
-alias glm='git ls-files --modified | uniq'
+alias gco="git checkout"
+alias grm="git rebase master"
+alias grc="git rebase --continue"
+alias gls="git ls-files"
+alias glm="git ls-files --modified | uniq"
+
+# Set "current" as a symbolic ref to the current branch
+alias gsc='git symbolic-ref refs/heads/current refs/heads/`git symbolic-ref --short HEAD`'
 
 # Makes bash completion work with the gco alias.
 __git_complete gco _git_checkout
@@ -52,12 +54,12 @@ function lmigrate {
 }
 
 # Rails aliases
-alias console='rails console'
-alias generate='rails generate'
-alias server='rails server'
+alias console="rails console"
+alias generate="rails generate"
+alias server="rails server"
 
 # RSpec aliases
-alias pspec='bundle exec parallel_rspec --multiply-processes 0.75 --type turnip'
+alias pspec="bundle exec parallel_rspec --multiply-processes 0.75 --type turnip"
 
 # Generate a migration and open it in Sublime Text
 function migrate {
@@ -74,17 +76,23 @@ function stripcolour {
 
 # List failing rspec tests
 function failing-tests {
-    RE='rspec\s+\./(spec/[^:]+:\d+)'
-    grep -P "$RE" tmp/failing_specs.log | ssed -R -e 's!^.*?'"$RE"'.*$!\1!'
+    RE='spec/.*?_spec\.rb(?::\d+|\[\d+(?::\d+)*\])'
+    grep -P $RE tmp/failing_specs.log | ssed -R -e 's!^.*?('"$RE"').*$!\1!'
 }
 
 function failing-files {
-    failing-tests | ssed -R -e 's/^(.*):\d+$/\1/' | uniq
+    failing-tests | ssed -R -e 's/^(.*?)(:\d+|\[\d+(?::\d+)*\])$/\1/' | uniq
+}
+
+function failing-specs {
+    failing-files | grep -P '_spec\.rb$'
 }
 
 export PATH="$HOME/bin:$PATH"
 export PATH="/usr/local/bin:${PATH//\/usr\/local\/bin:/}"
 
 eval "$(direnv hook bash)"
+
+[[ -s ~/.twig/twig-completion.bash ]] && source ~/.twig/twig-completion.bash
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
