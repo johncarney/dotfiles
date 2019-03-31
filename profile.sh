@@ -14,11 +14,12 @@ alias ls="ls -Alh"
 
 # Git aliases
 alias gco="git checkout"
+alias gcb="git checkout -b"
 alias grm="git rebase master"
 alias grc="git rebase --continue"
 alias gls="git ls-files"
 alias glm="git ls-files --modified | uniq"
-alias gfa="git fetch --all --prune"
+alias gfa="git fetch --all --prune --tags"
 alias gri="git rebase --interactive"
 
 # Set "current" as a symbolic ref to the current branch
@@ -70,7 +71,7 @@ function stripcolour {
 # List failing rspec tests
 function failing-tests {
     RE='spec/.*?_spec\.rb(?::\d+|\[\d+(?::\d+)*\])'
-    grep -P $RE tmp/failing_specs.log | ssed -R -e 's!^.*?('"$RE"').*$!\1!'
+    grep -P $RE tmp/rspec-example-status.txt | grep ' failed ' | ssed -R -e 's!^.*?('"$RE"').*$!\1!'
 }
 
 function failing-files {
