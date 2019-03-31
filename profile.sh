@@ -1,4 +1,3 @@
-
 [[ -s "$HOME/.bashrc" ]] && source "$HOME/.bashrc"
 
 export HISTFILESIZE=120000
@@ -22,10 +21,8 @@ alias glm="git ls-files --modified | uniq"
 alias gfa="git fetch --all --prune --tags"
 alias gri="git rebase --interactive"
 
-# Set "current" as a symbolic ref to the current branch
-alias gsc='git symbolic-ref refs/heads/current refs/heads/`git symbolic-ref --short HEAD`'
 
-# Makes bash completion work with the gco alias.
+# Makes bash completion work with gco and gri aliases.
 __git_complete gco _git_checkout
 __git_complete gri _git_rebase
 
@@ -81,7 +78,3 @@ function failing-files {
 function failing-specs {
     failing-files | grep -P '_spec\.rb$'
 }
-
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

@@ -1,3 +1,3 @@
 install:
 	ln -vsf ${PWD}/bashrc.sh ${HOME}/.bashrc
-	ln -vsf ${PWD}/profile.sh ${HOME}/.profile
+	ln -vsf ${PWD}/profile.sh ${HOME}/.bash_profile
