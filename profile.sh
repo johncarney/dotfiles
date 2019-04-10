@@ -1,12 +1,14 @@
-[[ -s "$HOME/.bashrc" ]] && source "$HOME/.bashrc"
+if [ -s "$HOME/.bashrc" ]; then
+    source "$HOME/.bashrc"
+fi
 
 export HISTFILESIZE=120000
 export HISTSIZE=30000
 export HISTCONTROL=erasedups:ignorespace
 shopt -s histappend
 
-if [ -f `brew --prefix`/etc/bash_completion ]; then
-    . `brew --prefix`/etc/bash_completion
+if [ -f "$BREW_PREFIX/etc/bash_completion" ]; then
+    source "$BREW_PREFIX/etc/bash_completion"
 fi
 
 alias ls="ls -Alh"
@@ -20,6 +22,8 @@ alias gls="git ls-files"
 alias glm="git ls-files --modified | uniq"
 alias gfa="git fetch --all --prune --tags"
 alias gri="git rebase --interactive"
+
+alias grmi="git rebase master --interactive"
 
 
 # Makes bash completion work with gco and gri aliases.
