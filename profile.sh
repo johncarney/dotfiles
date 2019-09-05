@@ -27,8 +27,10 @@ alias grmi="git rebase master --interactive"
 
 
 # Makes bash completion work with gco and gri aliases.
-__git_complete gco _git_checkout
-__git_complete gri _git_rebase
+if [ -n "$(type -t __git_complete)" ]; then
+    __git_complete gco _git_checkout
+    __git_complete gri _git_rebase
+fi
 
 # ---------------------------------------------------
 # Most recent Rails migration(s)
