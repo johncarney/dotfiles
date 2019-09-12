@@ -1,0 +1,92 @@
+#!/usr/bin/env ruby
+
+require "net/http"
+
+module Callable
+  def self.included(base)
+    base.include ToProc
+    base.extend ClassMethods
+    base.extend ToProc
+  end
+
+  module ToProc
+    def to_proc
+      Proc.new(&method(:call))
+    end
+  end
+
+  module ClassMethods
+    def call(*args)
+      new(*args).call
+    end
+  end
+end
+
+class GetAutoProxyUrl
+  include Callable
+
+  URL_REGEX = /^URL:\s*(.+)\s*$/i
+
+  attr_reader :service
+
+  def initialize(service)
+    @service = service
+  end
+
+  def call
+    `networksetup -getautoproxyurl #{service}`.scan(URL_REGEX).first&.first
+  end
+end
+
+class GetAutoProxyConfig
+  include Callable
+
+  attr_reader :autoproxyurl
+
+  def initialize(autoproxyurl)
+    @autoproxyurl = autoproxyurl
+  end
+
+  def call
+    Net::HTTP.get(URI(autoproxyurl))
+  rescue SocketError => x
+    $stderr.puts x
+    $stderr.puts autoproxyurl
+  end
+end
+
+class GetProxyUrl
+  include Callable
+
+  PROXY_REGEX = /^.*return\s*"PROXY\s+([^"]+?)\s*"\s*;.*$/i
+
+  attr_reader :proxy_config
+
+  def initialize(proxy_config)
+    @proxy_config = proxy_config
+  end
+
+  def call
+    proxy_config.scan(PROXY_REGEX).last&.first
+  end
+end
+
+class GetFirstProxyUrl
+  include Callable
+
+  attr_reader :services
+
+  def initialize(*services)
+    @services = services
+  end
+
+  def lazy_chain_map(items, *mappers)
+    mappers.reduce(items.lazy) { |memo, mapper| memo.map(&mapper).select(&:itself) }
+  end
+
+  def call
+    lazy_chain_map(services, GetAutoProxyUrl, GetAutoProxyConfig, GetProxyUrl).take(1).to_a
+  end
+end
+
+puts GetFirstProxyUrl.call(*ARGV)
