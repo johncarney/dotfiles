@@ -11,6 +11,22 @@ if [ -f "$BREW_PREFIX/etc/bash_completion" ]; then
     source "$BREW_PREFIX/etc/bash_completion"
 fi
 
+# export DOTFILES="$(sourcedir)"
+
+# function setproxy {
+#     local proxy="$1"
+
+#     if [ -n "$proxy" ]; then
+#         export http_proxy="$proxy"
+#         export https_proxy="$proxy"
+#         export ftp_proxy="$proxy"
+#     fi
+# }
+
+# if [ -x "$DOTFILES/systemproxy" ]; then
+#     setproxy "$($DOTFILES/systemproxy wi-fi)"
+# fi
+
 alias ls="ls -Alh"
 
 # Git aliases
@@ -24,7 +40,6 @@ alias gfa="git fetch --all --prune --tags"
 alias gri="git rebase --interactive"
 
 alias grmi="git rebase master --interactive"
-
 
 # Makes bash completion work with gco and gri aliases.
 if [ -n "$(type -t __git_complete)" ]; then
@@ -54,9 +69,9 @@ function lmigrate {
 }
 
 # Rails aliases
-alias console="rails console"
-alias generate="rails generate"
-alias server="rails server"
+alias rconsole="rails console"
+alias rgenerate="rails generate"
+alias rserver="rails server"
 
 # Generate a migration and open it in Sublime Text
 function migrate {
@@ -84,3 +99,8 @@ function failing-files {
 function failing-specs {
     failing-files | grep -P '_spec\.rb$'
 }
+
+# Setting PATH for Python 3.7
+# The original version is saved in .bash_profile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+export PATH
