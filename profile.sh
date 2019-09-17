@@ -11,21 +11,20 @@ if [ -f "$BREW_PREFIX/etc/bash_completion" ]; then
     source "$BREW_PREFIX/etc/bash_completion"
 fi
 
-# export DOTFILES="$(sourcedir)"
+if [ -f "$HOME/.local_profile" ]; then
+    source "$HOME/.local_profile"
+fi
 
-# function setproxy {
-#     local proxy="$1"
+# Docker Ruby
+function dr {
+    docker run --interactive --tty --rm --volume "$(pwd)":/app --workdir /app ruby:2.5.6 $@
+}
 
-#     if [ -n "$proxy" ]; then
-#         export http_proxy="$proxy"
-#         export https_proxy="$proxy"
-#         export ftp_proxy="$proxy"
-#     fi
-# }
+# docker ruby shell
+alias drsh="dr bash"
 
-# if [ -x "$DOTFILES/systemproxy" ]; then
-#     setproxy "$($DOTFILES/systemproxy wi-fi)"
-# fi
+# docker ruby bundle install
+alias drbi="dr bundle install --standalone --path=/app/vendor/bundle"
 
 alias ls="ls -Alh"
 
@@ -60,9 +59,8 @@ fi
 #  # => db/migrate/20140813044534_my_migration.rb
 #
 function lmigrate {
-    if [ -n "$1" ] ; then
-        N="$1"
-    else
+    local N="$1"
+    if [ -z "$N" ] ; then
         N="1"
     fi
     ls -1 db/migrate/*.rb | tail -n "$N"
