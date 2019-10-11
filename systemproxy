@@ -48,6 +48,7 @@ class GetAutoProxyConfig
   end
 
   def call
+    $stderr.puts autoproxyurl
     Net::HTTP.get(URI(autoproxyurl))
   rescue SocketError => x
     $stderr.puts x

@@ -98,6 +98,21 @@ function failing-specs {
     failing-files | grep -P '_spec\.rb$'
 }
 
+# Loads contents of .env (if available) into environment
+function de {
+  if [ -f .env ]; then
+    < .env grep -v "^#" | tr '\n' ' ' | xargs -J% env % "$@";
+  else
+    "$@";
+  fi;
+}
+
+# Bundle exec
+alias be="de bundle exec"
+
+# Bundle exec, but with .env
+alias debe="de bundle exec"
+
 # Setting PATH for Python 3.7
 # The original version is saved in .bash_profile.pysave
 PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
